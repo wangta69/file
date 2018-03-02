@@ -6,7 +6,7 @@ class File{
      * Create a folder
      * @param $path path/of/folder/to/create
      */
-    public function mkfolder($path){## 폴더 생성
+    public static function mkfolder($path){## 폴더 생성
         //if(!file_exists($path)){
         if(!is_dir($path)){
             $result = @mkdir($path, 0777);
@@ -22,13 +22,13 @@ class File{
     * @param $path /home/a/b/c/d
     * if not exist first folder "home" then create "home" then check next if not exist then create next....
     */
-    public function mkfolders($path){
+    public static function mkfolders($path){
         $exFolder = explode("/", $path);
         $curpath = "";
         if(is_array($exFolder)) foreach ($exFolder as $key => $value) {
             if($value && $value != "." && $value != ".."){
                 $curpath = $curpath."/".$value;
-                $this->mkfolder($curpath);
+                File::mkfolder($curpath);
             }else if($value == "." || $value == ".."){
                 $curpath = $value;
             }
@@ -112,8 +112,8 @@ class File{
      * @param $source String path/of/source/folder
      * @param $dest String path/of/target/folder
      */
-    public function CopyFiles($source,$dest){   
-        $this->mkfolders($dest);
+    public static function CopyFiles($source,$dest){   
+        File::mkfolders($dest);
         $folder = opendir($source);
         while($file = readdir($folder)){
             if ($file == '.' || $file == '..') continue;
