@@ -9,7 +9,7 @@ class File{
     public static function mkfolder($path){## 폴더 생성
         //if(!file_exists($path)){
         if(!is_dir($path)){
-            $result = @mkdir($path, 0777);
+            $result = @mkdir($path, 0755);
             if(!$result){ 
                 return false;
             }else return true;
