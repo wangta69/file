@@ -1,7 +1,9 @@
-<?php 
+<?php
 namespace Pondol\Files;
 
-class File{
+// File::mkfolder($curpath);
+// self::mkfolder
+class File {
 /**
      * Create a folder
      * @param $path path/of/folder/to/create
@@ -10,12 +12,12 @@ class File{
         //if(!file_exists($path)){
         if(!is_dir($path)){
             $result = @mkdir($path, 0755);
-            if(!$result){ 
+            if(!$result){
                 return false;
             }else return true;
         }
     }
-    
+
     /**
     * Create a folders
     * if not exist a foler to final path, this create each folder
@@ -32,20 +34,20 @@ class File{
             }else if($value == "." || $value == ".."){
                 $curpath = $value;
             }
-        } 
+        }
     }
-    
-    
+
+
     /**
      * Move Folder
      * @param $source form : path/of/source/folder
      * @param #dest to : path/of/destination/folder
      */
-    public function MoveFolder($source,$dest){ 
+    public function MoveFolder($source,$dest){
         $this->CopyFiles($source,$dest);
         $this->RemoveFiles($source);
     }
-    
+
     /**
      * return files and diretoris existing in given directory
      * @param $path String
@@ -60,19 +62,19 @@ class File{
             }
             closedir($folder);
         }
-        
+
         return $rtn;
     }
-    
+
     /**
-     * In some case (NFT System), is_file will not work, then use is_file_lfs 
+     * In some case (NFT System), is_file will not work, then use is_file_lfs
      */
     public function is_file_lfs($path){
         exec('[ -f "'.$path.'" ]', $tmp, $ret);
         return $ret == 0;
     }
-        
-        
+
+
     /**
      * Copy File from source foler to destination folder
      * @param $file String filename
@@ -82,7 +84,7 @@ class File{
     public function cpfile($file, $source_path, $target_path){## 폴더 생성
         copy($source_path."/".$file, $target_path."/".$file);
     }
-    
+
     /**
      * Copy file from source folder to dest. foler with some options
      * @param $source_path String path/of/source/folder/and/filename
@@ -90,34 +92,34 @@ class File{
      * @param $arr Array : $arr["overwrite"] : true or false
      */
     public function CopyFile($source_path, $target_path, $arr=null){## 폴더 생성
-        $filename   = substr(strrchr($target_path, "/"), 1);
-        $filepath   = substr($target_path, 0, -strlen($filename));
+        $filename = substr(strrchr($target_path, "/"), 1);
+        $filepath = substr($target_path, 0, -strlen($filename));
         if(is_array($arr)){
             if($arr["overwrite"] == true && is_file($target_path) ){
-                $filename   = "_".$filename;
+                $filename    = "_".$filename;
                 copy($source_path, $filepath.$filename);
             }else{
                 copy($source_path, $target_path);
             }
-        
+
         }else{
             copy($source_path, $target_path);
         }
-        
+
         return $filename;
     }
-    
+
     /**
      * Copy multi files(actually copying folder)
      * @param $source String path/of/source/folder
      * @param $dest String path/of/target/folder
      */
-    public static function CopyFiles($source,$dest){   
+    public static function CopyFiles($source,$dest){
         File::mkfolders($dest);
         $folder = opendir($source);
         while($file = readdir($folder)){
             if ($file == '.' || $file == '..') continue;
-            
+
             if(is_dir($source.'/'.$file)){
                 mkdir($dest.'/'.$file,0777);
                 $this->CopyFiles($source.'/'.$file,$dest.'/'.$file);
@@ -126,7 +128,7 @@ class File{
         closedir($folder);
         return 1;
     }
-    
+
     /**
      * This method same as dirList but return only files
      * @param $path String
@@ -134,19 +136,19 @@ class File{
      */
     public function readFileList($path){
         $open_file = opendir($path);
-        
+
         while($opendir = readdir($open_file)) {
             if(($opendir != ".") && ($opendir != "..") && is_file($targetdir."/".$opendir)) {
-                //$createTime   = filemtime($path.$opendir); 
+                //$createTime   = filemtime($path.$opendir);
                 $fileArr[] = $opendir;
             }
         }
         closedir($open_file);
         return $fileArr;
-    
+
     }
-    
-    
+
+
     /**
      * Remove a file
      * @param $source String path/to/source/filename
@@ -155,9 +157,9 @@ class File{
         if (is_file($source)) unlink($source);
         return 1;
     }
-    
+
     /**
-     * Remove all files and folders lower depth then a given folder  
+     * Remove all files and folders lower depth then a given folder
      * action this means Remoing Folder
      * @param $source String path/to/source/folder
      */
@@ -174,8 +176,8 @@ class File{
         }
         return 1;
     }
-    
-    
+
+
 
     /**
     * alias of MoveFolder
@@ -183,25 +185,25 @@ class File{
     public function moveFiles($src, $desc){
         $this->MoveFolder($src, $desc);
     }
-    
-    
+
+
     /**
      * Change window's path to unix(linux)'s
      */
     public function isfile($file){ //윈도우등의 경로를 바로 바꾸어 줌
-        return preg_match('/^[^.^:^?^\-][^:^?]*\.(?i)' . $this->getexts() . '$/',$file); 
-        //first character cannot be . : ? - subsequent characters can't be a : ? 
-        //then a . character and must end with one of your extentions 
-        //getexts() can be replaced with your extentions pattern 
-    } 
-    
-    private function getexts(){ 
-        //list acceptable file extensions here 
-        return '(app|avi|doc|docx|exe|ico|mid|midi|mov|mp3| 
-        mpg|mpeg|pdf|psd|qt|ra|ram|rm|rtf|txt|wav|word|xls)'; 
-    } 
-    
-    
+        return preg_match('/^[^.^:^?^\-][^:^?]*\.(?i)' . $this->getexts() . '$/',$file);
+        //first character cannot be . : ? - subsequent characters can't be a : ?
+        //then a . character and must end with one of your extentions
+        //getexts() can be replaced with your extentions pattern
+    }
+
+    private function getexts(){
+        //list acceptable file extensions here
+        return '(app|avi|doc|docx|exe|ico|mid|midi|mov|mp3|
+        mpg|mpeg|pdf|psd|qt|ra|ram|rm|rtf|txt|wav|word|xls)';
+    }
+
+
     /**
      * extract filename and extension from filename
      * @param $path String /path/to/filename
@@ -213,5 +215,5 @@ class File{
         $rtn["filename"]        = substr($rtn["fullfilename"], 0, -(strlen($rtn["ext"])+1));
         return $rtn;
      }
-    
-} 
+
+}
