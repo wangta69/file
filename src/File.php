@@ -210,9 +210,9 @@ class File {
      * @return $rtn Array full_filename, extension, filename not having extension
      */
      public function extfile($path){
-        $rtn["fullfilename"]    = substr(strrchr($path, "/"), 1);
-        $rtn["ext"]             = substr(strrchr($path, "."), 1);
-        $rtn["filename"]        = substr($rtn["fullfilename"], 0, -(strlen($rtn["ext"])+1));
+        $rtn["fullfilename"] = substr(strrchr($path, "/"), 1);
+        $rtn["ext"] = substr(strrchr($path, "."), 1);
+        $rtn["filename"] = substr($rtn["fullfilename"], 0, -(strlen($rtn["ext"])+1));
         return $rtn;
      }
 
